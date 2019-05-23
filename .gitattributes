@@ -1,0 +1,3 @@
+*.erl linguist-vendored
+*.hrl linguist-vendored
+*.html linguist-vendored
