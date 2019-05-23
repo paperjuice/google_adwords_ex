@@ -1,0 +1,699 @@
+swagger: "2.0"
+info:
+  description: "Service for creating and managing ads."
+  version: "1.0.0"
+  title: "Google-multi"
+host: "localhost:9999"
+basePath: "/v1"
+schemes:
+  - "http"
+paths:
+  /report/{report_type}:
+    get:
+      tags:
+        - "report"
+      summary: "Get a report based on the attributes passed in the query string."
+      description: ""
+      operationId: "getReport"
+      produces:
+        - "application/json"
+      parameters:
+      - name: "report_type"
+        in: "path"
+        description: "The report table the data is taken from."
+        required: true
+        type: "string"
+        enum: ["ad_performance"]
+        default: "ad_performance"
+      - name: "attributes"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "array"
+        default: [ "campaign_name", "clicks", "conversions", "impressions", "cost"]
+        items:
+          type: "string"
+          enum: [ "campaign_id", "campaign_name", "ad_group_id", "clicks", "conversions", "impressions", "cost"]
+      - name: "date"
+        in: "query"
+        description: "The interval of time the data is taken. E.g. today|last_7_days|20180101,20181231"
+        required: true
+        type: "string"
+        default: "today"
+      responses:
+        "200":
+          description: "Successfully got the requested reports."
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 200
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                  attributes:
+                    type: "object"
+                    properties:
+                      total:
+                        type: "object"
+                      data:
+                        type: "array"
+                        items:
+                          type: "object"
+  /customer:
+    get:
+      tags:
+        - "customer"
+      summary: "Get a list of all customer info"
+      description: ""
+      operationId: "getCustomers"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "201":
+          description: "Successfully got all customer info"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 201
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                    example: "customer"
+                  attributes:
+                    type: "array"
+                    items:
+                      type: "object"
+                      properties:
+                        auto_tagging_enabled:
+                          type: "boolean"
+                          format: "text"
+                          example: "false"
+                        can_manage_clients:
+                          type: "boolean"
+                          format: "text"
+                          example: false
+                        currency_code:
+                          type: "string"
+                          format: "text"
+                          example: "SEK"
+                        customer_id:
+                          type: "string"
+                          format: "text"
+                          example: "123455678"
+                        date_time_zone:
+                          type: "string"
+                          format: "text"
+                          example: "Europe/Stockholm"
+                        descriptive_name:
+                          type: "string"
+                          format: "text"
+                          example: "Name"
+                        final_url_suffix:
+                          type: "string"
+                          format: "text"
+                          example: "supported only in test account"
+                        parallel_tracking_enabled:
+                          type: "boolean"
+                          format: "text"
+                          example: false
+                        test_account:
+                          type: "boolean"
+                          format: "text"
+                          example: true
+                        tracking_url_template:
+                          type: "string"
+                          format: "text"
+                          example: "tracking url"
+
+  /managed_customer/customer:
+    post:
+      tags:
+        - "managedCustomer"
+      summary: "Add a new account"
+      description: ""
+      operationId: "addCustomer"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Managed customer service object required to add a new account."
+          required: true
+          schema:
+            $ref: "#/bodies/AddCustomer"
+      responses:
+        "201":
+          description: "Customer successfully added"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 201
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                    example: "managed_customer"
+                  attributes:
+                    type: "array"
+                    items:
+                      type: "object"
+                      properties:
+                        name:
+                          type: "string"
+                          format: "text"
+                          example: "AccountName01"
+                        currency_code:
+                          type: "string"
+                          format: "text"
+                          example: "SEK"
+                        date_time_zone:
+                          type: "string"
+                          format: "text"
+                          example: "Europe/London"
+
+  /budget:
+    post:
+      tags:
+        - "budget"
+      summary: "Add a new budget"
+      description: ""
+      operationId: "addBudget"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Budget service object required to add a new budget."
+          required: true
+          schema:
+            $ref: "#/bodies/AddBudget"
+      responses:
+        "201":
+          description: "Budget successfully created"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 201
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                    example: "add_budget"
+                  attributes:
+                    type: "object"
+                    properties:
+                      budget_id:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+                      name:
+                        type: "string"
+                        format: "text"
+                        example: "AccountName01"
+                      delivery_method:
+                        type: "string"
+                        format: "text"
+                        example: "STANDARD"
+                      reference_count:
+                        type: "string"
+                        format: "text"
+                        example: ""
+                      is_explicityly_shared:
+                        type: "boolean"
+                        example: true
+                      status:
+                        type: "string"
+                        format: "text"
+                        example: "ENABLED"
+                      amount:
+                        type: "string"
+                        format: "text"
+                        example: "1000000"
+    get:
+      tags:
+        - "budget"
+      summary: "Get budget"
+      description: ""
+      operationId: "addBudget"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "query"
+          name: "fields"
+          type: "array"
+          items:
+            type: "string"
+            format: "text"
+            enum:
+              - "BudgetName"
+              - "BudgetId"
+      responses:
+        "201":
+          description: "Budget successfully created"
+
+  /campaign:
+    post:
+      tags:
+        - "campaign"
+      summary: "Create a new campaign"
+      description: ""
+      operationId: "addCampaign"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Campaign service object required to create a new campaign."
+          required: true
+          schema:
+            $ref: "#/bodies/AddCampaign"
+      responses:
+        "201":
+          description: "Campaign successfully created"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 201
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                    example: "add_campaign"
+                  attributes:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+                      campaign_group_id:
+                        type: "string"
+                        format: "text"
+                        example: "no_idea"
+                      name:
+                        type: "string"
+                        format: "text"
+                        example: "CampaignName01"
+                      start_date:
+                        type: "string"
+                        format: "text"
+                        example: ""
+                      status:
+                        type: "string"
+                        format: "text"
+                        example: "status"
+
+  /ad_group:
+    post:
+      tags:
+        - "adGroup"
+      summary: "Create a new ad group"
+      description: ""
+      operationId: "addAddGroup"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "AdGroup service object required to create a new ad group."
+          required: true
+          schema:
+            $ref: "#/bodies/AddAdGroup"
+      responses:
+        "201":
+          description: "AdGroup successfully created"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 201
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                    example: "ad_group"
+                  attributes:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+                      campaign_id:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+                      campaing_name:
+                        type: "string"
+                        format: "text"
+                        example: "CamapaignName01"
+                      content_bid_criterion_type_group:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+                      base_camapaign_id:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+                      base_ad_group_id:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+                      tracking_url_template:
+                        type: "string"
+                        format: "text"
+                        example: "123456789"
+
+  /asset/image:
+    post:
+      tags:
+        - "asset"
+      summary: "Create a new image asset"
+      description: ""
+      operationId: "createImage"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Image service object required to create a new image asset."
+          required: true
+          schema:
+            $ref: "#/bodies/CreateImage"
+      responses:
+        "201":
+          description: "Image successfully created"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 201
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                    example: "asset"
+                  attributes:
+                    type: "array"
+                    items:
+                      type: "object"
+                      properties:
+                        id:
+                          type: "string"
+                          format: "text"
+                          example: "123456789"
+
+  /ad_group_ad/ad/multi_asset_ad:
+    post:
+      tags:
+        - "ad"
+      summary: "Create a new multi asset ad"
+      description: ""
+      operationId: "createMultiAssetAd"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Ad group ad service object required to create a new multi asset ad."
+          required: true
+          schema:
+            $ref: "#/bodies/CreateMultiAssetAd"
+      responses:
+        "201":
+          description: "Multi asset ad successfully created"
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                format: "text"
+                example: true
+              code:
+                type: "integer"
+                format: "int64"
+                example: 201
+              data:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    format: "text"
+                    example: "asset"
+                  attributes:
+                    type: "array"
+                    items:
+                      type: "object"
+                      properties:
+                        id:
+                          type: "string"
+                          format: "text"
+                          example: "123456789"
+
+bodies:
+  AddBudget:
+    type: "object"
+    requrired:
+      - "operations"
+    properties:
+      name:
+        type: "string"
+        format: "text"
+        example: "BudgetName01"
+      micro_amount:
+        type: "string"
+        format: "text"
+        example: "1000000"
+
+  AddAdGroup:
+    type: "object"
+    requrired:
+      - "operations"
+    properties:
+      name:
+        type: "string"
+        format: "text"
+        example: "AdGroupName01"
+      campaign_id:
+        type: "string"
+        format: "text"
+        example: "1614670930"
+      status:
+        type: "string"
+        format: "text"
+        example: "ENABLED"
+
+  AddCustomer:
+    type: "object"
+    required:
+      - "operations"
+    properties:
+      name:
+        type: "string"
+        format: "text"
+        example: "AccountName01"
+      currency_code:
+        type: "string"
+        format: "text"
+        example: "SEK"
+      date_time_zone:
+        type: "string"
+        format: "text"
+        example: "Europe/London"
+
+  AddCampaign:
+    type: "object"
+    required:
+      - "operations"
+    properties:
+      name:
+        type: "string"
+        format: "text"
+        example: "CampaignName01"
+      advertising_channel_type:
+        type: "string"
+        format: "text"
+        example: "DISPLAY"
+      budget:
+        type: "object"
+        properties:
+          budget_id:
+            type: "string"
+            format: "text"
+            example: "1664061346"
+      bidding_strategy_configuration:
+        type: "object"
+        properties:
+          bidding_strategy_type:
+            type: "string"
+            format: "text"
+            example: "MANUAL_CPC"
+
+
+  CreateImage:
+    type: "object"
+    properties:
+      assets:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            image_url:
+              type: "string"
+              format: "text"
+              example: "http://image.uri"
+            asset_name:
+              type: "string"
+              format: "text"
+              example: "My super pretty image"
+
+  CreateMultiAssetAd:
+    type: "object"
+    required:
+    properties:
+      ad_group_id:
+        type: "string"
+        format: "text"
+        example: "56180453982"
+      descriptions:
+        type: "array"
+        items:
+          type: "string"
+          format: "text"
+        example: ["Awesome description"]
+      business_name:
+        type: "string"
+        format: "text"
+        example: "MyBus"
+      headlines:
+        type: "array"
+        items:
+          type: "string"
+          format: "text"
+        example: ["My headline"]
+      logo_images:
+        type: "array"
+        items:
+          type: "string"
+          format: "text"
+        example: ["216153042"]
+      marketing_images:
+        type: "array"
+        items:
+          type: "string"
+          format: "text"
+        example: ["98544743"]
+      square_marketing_images:
+        type: "array"
+        items:
+          type: "string"
+          format: "text"
+        example: ["99678319"]
+      long_headline:
+        type: "string"
+        format: "text"
+        example: "Long headline incoming"
+      main_color:
+        type: "string"
+        format: "text"
+        example: "#565656"
+      accent_color:
+        type: "string"
+        format: "text"
+        example: "#ffffff"
+      allow_flexible_color:
+        type: "boolean"
+        example: false
+      call_to_action_text:
+        type: "string"
+        format: "text"
+        example: "Contact us"
+      final_urls:
+        type: "array"
+        items:
+          type: "string"
+          format: "text"
+        example: ["https://hello.me/"]
+      format_setting:
+        type: "string"
+        format: "text"
+        example: "NON_NATIVE"

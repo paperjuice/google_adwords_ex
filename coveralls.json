@@ -1,0 +1,11 @@
+{
+  "skip_files": [
+    "src/"
+  ],
+   "terminal_options": {
+   "file_column_width": 70
+  },
+  "coverage_options": {
+    "output_dir": "priv/"
+  }
+}
