@@ -1,4 +1,4 @@
-# Google-multi
+# Google AdWords
 ### Description
 **DISCLAIMER**: Google AdWords is going to be deprecated sometimes at the beginning of 2020.
 Please use Google Ads instead, the new API that uses GRPC and Protobuf.
