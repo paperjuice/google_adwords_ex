@@ -3,7 +3,7 @@
 **DISCLAIMER**: Google AdWords is going to be deprecated sometimes at the beginning of 2020.
 Please use Google Ads instead, the new API that uses GRPC and Protobuf.
 
-This is an unfined project and required a bunch of more work.
+This is an unfinished project that requires a bunch more work.
 
 It is a good example of how to work with SOAP and wsdl documents in the context of Elixir.
 
